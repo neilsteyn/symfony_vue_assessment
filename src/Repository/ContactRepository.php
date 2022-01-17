@@ -47,4 +47,28 @@ class ContactRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findFiltered($filters){
+        $qb = $this->_em->createQueryBuilder();
+        $qb->select('c.name, c.email, c.gender, c.content')
+            ->from('App\Entity\Contact', 'c');
+
+            if (!empty($filters['search']) && !empty($filters['gender'])){
+                $qb->where('c.name LIKE :s')
+                ->andWhere('c.email LIKE :s')
+                ->andWhere('c.gender = :g')
+                ->setParameters(array('s' => '%'.addcslashes($filters['search'], '%_').'%', 'g' => $filters['gender']));
+            }
+            else if (!empty($filters['search'])){
+                $qb->where('c.name LIKE :s')
+                ->andWhere('c.email LIKE :s')
+                ->setParameters(array('s' => '%'.addcslashes($filters['search'], '%_').'%'));
+            }
+            else if (!empty($filters['gender'])){
+                $qb->where('c.gender = :g')
+                ->setParameters(array('g' => $filters['gender']));
+            }
+
+        return $qb->getQuery()->getArrayResult();
+    }
 }
