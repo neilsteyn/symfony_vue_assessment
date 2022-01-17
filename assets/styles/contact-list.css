@@ -1,0 +1,49 @@
+/** contact-list styles */
+
+nav {
+    /* height: 100px; */
+    padding: 25px;
+    /* background-color: aliceblue; */
+    box-shadow: 1px 0 3px #a6a6a4;
+}
+
+nav ul {
+    float: right;
+    list-style: none;
+    padding: 0;
+}
+
+nav ul li a {
+    text-decoration: none;
+}
+
+nav ul li a:hover {
+    cursor: pointer;
+}
+
+
+/* .container {
+} */
+
+table {
+    width: 75%;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+table tr {
+    text-align: center;
+}
+
+table tr td {
+    padding: 15px;
+}
+
+table .heading {
+    /* background-color: #cecece; */
+    background-color: #cecece4d;
+}
+
+table .heading th {
+    padding: 15px;
+}
