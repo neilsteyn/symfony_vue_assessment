@@ -3,6 +3,7 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 
 import ContactForm from './components/ContactForm'
+import LoginForm from './components/LoginForm'
 
 Vue.use(VueAxios, axios)
 
@@ -12,6 +13,7 @@ Vue.use(VueAxios, axios)
 new Vue({
     el: '#app',
     components: {
-        ContactForm
+        ContactForm,
+        LoginForm
     }
 });

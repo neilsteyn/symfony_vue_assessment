@@ -1,0 +1,8 @@
+{% extends 'base.html.twig' %}
+{% block title %}Login{% endblock %}
+{% block body %}
+    <login-form csrf="{{ csrf_token('authenticate') }}"></login-form>
+    {% if error %}
+        <div class="auth-error">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+    {% endif %}
+{% endblock %}
