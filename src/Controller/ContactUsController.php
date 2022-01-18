@@ -11,6 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ContactUsController extends AbstractController
 {
@@ -50,6 +51,29 @@ class ContactUsController extends AbstractController
         }
 
         $responseJson = array('success'=>false, 'msg' => '');      
+        return JsonResponse::create($responseJson);
+    }
+     
+    /**
+     * @Route("/contact/validate-email", name="contact_validate_email"), method="GET"
+     */
+    public function validate_email(Request $request, ValidatorInterface $validator): JsonResponse
+    {
+        $email = $request->get('e');
+        $emailConstraint = new \Symfony\Component\Validator\Constraints\Email();
+        $emailConstraint->message = 'Invalid email address';
+    
+        $errorList = $validator->validate(
+            $email,
+            $emailConstraint
+        );
+
+        $responseJson = array('is_valid'=>true);
+
+        if (count($errorList) > 0 || empty($email)){
+            $responseJson = array('is_valid'=>false, 'msg'=>$emailConstraint->message);
+        }
+
         return JsonResponse::create($responseJson);
     }
 

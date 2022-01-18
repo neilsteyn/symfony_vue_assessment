@@ -76,29 +76,41 @@ export default {
   },
   methods: {
     onSubmit: function () {
-      if (!this.name) {
-        this.$refs.name.classList.add("error");
-      }
-      if (!this.email) {
-        this.$refs.email.classList.add("error");
-      }
-      if (!this.gender) {
-        this.$refs.gender.classList.add("error");
-      }
-      if (!this.content) {
-        this.$refs.content.classList.add("error");
-      }
-
-      if (
-        this.$refs.name.classList.contains("error") ||
-        this.$refs.email.classList.contains("error") ||
-        this.$refs.gender.classList.contains("error") ||
-        this.$refs.content.classList.contains("error")
-      ) {
-        return;
-      }
-
       (async () => {
+        if (!this.name) {
+          this.$refs.name.classList.add("error");
+        }
+        if (!this.email) {
+          this.$refs.email.classList.add("error");
+        }
+        else {
+          try {
+            const res = await this.$http.get("contact/validate-email?e="+this.email);
+
+            if (!res.data.is_valid) {
+              this.$refs.email.classList.add("error");
+              return;
+            }
+          } catch (e) {
+            console.log(e);
+          }
+        }
+        if (!this.gender) {
+          this.$refs.gender.classList.add("error");
+        }
+        if (!this.content) {
+          this.$refs.content.classList.add("error");
+        }
+
+        if (
+          this.$refs.name.classList.contains("error") ||
+          this.$refs.email.classList.contains("error") ||
+          this.$refs.gender.classList.contains("error") ||
+          this.$refs.content.classList.contains("error")
+        ) {
+          return;
+        }
+
         try {
           const res = await this.$http.post("contact/create", {
             name: this.name,
@@ -127,7 +139,6 @@ export default {
 
       this.gender = gender;
 
-      // let dd = document.querySelector(".dropdown");
       let dd = this.$refs.dropdown;
       dd.classList.remove("show");
       dd.classList.add("hide");
@@ -138,7 +149,6 @@ export default {
       e.stopPropagation();
       e.preventDefault();
 
-      // let dd = e.target.parentElement;
       let dd = this.$refs.dropdown;
       if (dd.classList.contains("show")) {
         dd.classList.remove("show");
