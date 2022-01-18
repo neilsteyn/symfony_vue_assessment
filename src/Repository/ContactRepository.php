@@ -55,9 +55,16 @@ class ContactRepository extends ServiceEntityRepository
 
             if (!empty($filters['search']) && !empty($filters['gender'])){
                 $qb->where('c.name LIKE :s')
-                ->andWhere('c.email LIKE :s')
-                ->andWhere('c.gender = :g')
-                ->setParameters(array('s' => '%'.addcslashes($filters['search'], '%_').'%', 'g' => $filters['gender']));
+                ->andWhere('c.email LIKE :s');
+
+                $params = array('s' => '%'.addcslashes($filters['search'], '%_').'%');
+
+                if ($filters['gender'] != 'All'){
+                    $qb->andWhere('c.gender = :g');
+                    $params['g'] = $filters['gender'];
+                }
+
+                $qb->setParameters($params);
             }
             else if (!empty($filters['search'])){
                 $qb->where('c.name LIKE :s')
@@ -65,8 +72,10 @@ class ContactRepository extends ServiceEntityRepository
                 ->setParameters(array('s' => '%'.addcslashes($filters['search'], '%_').'%'));
             }
             else if (!empty($filters['gender'])){
-                $qb->where('c.gender = :g')
-                ->setParameters(array('g' => $filters['gender']));
+                if ($filters['gender'] != 'All'){
+                    $qb->where('c.gender = :g')
+                    ->setParameters(array('g' => $filters['gender']));
+                }
             }
 
         return $qb->getQuery()->getArrayResult();
